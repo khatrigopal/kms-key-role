@@ -1,3 +1,9 @@
+data "aws_region" "current" {}
+
+
+data "aws_caller_identity" "current" {}
+
+
 resource "aws_iam_role" "kms_role" {
   name = "my-kms-role"
 
@@ -29,11 +35,12 @@ data "aws_iam_policy_document" "kms_key_policy" {
       "kms:Decrypt",
     ]
 
-    resources = ["*"]
+    resources = ["arn:aws:kms:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:*"]]
   }
 }
 
 resource "aws_kms_key" "my_key" {
+  name = "testkms"
   description = "My KMS key"
   policy      = jsonencode(data.aws_iam_policy_document.kms_key_policy.json)
 }
