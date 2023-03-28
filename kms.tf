@@ -41,10 +41,11 @@ data "aws_iam_policy_document" "kms_key_policy" {
 
 resource "aws_kms_key" "my_key" {
   description = "My KMS key"
-  policy      = jsonencode(data.aws_iam_policy_document.kms_key_policy.json)
+  #policy      = jsonencode(data.aws_iam_policy_document.kms_key_policy.json)
+  policy      = data.aws_iam_policy_document.kms_key_policy.json
 }
 
 resource "aws_kms_alias" "kms_key_alias" {
-  name          = "alias/tesstkey"
+  key_alias          = "alias/tesstkey"
   target_key_id = aws_kms_key.my_key.key_id
 }
